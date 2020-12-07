@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function foo(num) {
+      console.log("foo: " + num);
+
+      // 记录 foo 被调用的次数     this.count++; } 
+
+      foo.count = 0;
+
+      var i;
+
+      for (i = 0; i < 10; i++) { if (i > 5) { foo(i); } } // foo: 6 // foo: 7 // foo: 8 // foo: 9 
+
+// foo 被调用了多少次？ console.log( foo.count ); // 0 -- WTF?
+
+  </script>
+</body>
+
+</html>

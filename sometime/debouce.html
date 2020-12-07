@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="button" id="input">
+  <script>
+    input.addEventListener("click", debounce(handle,500))
+    function handle() {
+      console.log(this);
+    }
+    function debounce(fnc, time){
+      let timer = null;
+      return function (){
+        if(timer){
+          clearTimeout(timer)
+        }
+        timer = setTimeout(() => {
+          timer = null;
+          fnc.apply(this, arguments);
+        }, time)
+      }
+    }
+    var a = 111;
+    
+  </script>
+</body>
+</html>

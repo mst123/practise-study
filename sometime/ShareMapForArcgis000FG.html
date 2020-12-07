@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <title>arcgis Demo For ShareMap</title>
+  <link rel="stylesheet" href="http://10.41.24.9/arcgis_js_api/3.14/esri/css/esri.css" />
+  <style>
+    html,
+    body,
+    #map {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #citationInfo {
+      position: absolute;
+      font-weight: bold;
+      font-size: 12pt;
+      left: 10px;
+      bottom: 10px;
+      z-Index: 999;
+    }
+  </style>
+  <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="http://10.41.24.9/arcgis_js_api/3.14/init.js"></script>
+</head>
+
+<body>
+  <div style="posetio:absolute;right:5px;left:5px">
+    <button id="btnAddFont">添加标注</button>
+    <button id="btnRemoveFont">移除标注</button>
+    <button id="btnAddRiverLayer">添加河流图层</button>
+    <button id="btnRemoveRiverLayer">移除河流图层</button>
+    <button id="btnOpenSQ">开启拾取</button>
+    <button id="btnCloseSQ">关闭拾取</button>
+    <button id="btnGetAllLayers">获取所有图层</button>
+
+    
+    <button id="btnZQJ">政区界图</button>
+    <button id="btnZQ">政区图</button>
+    <button id="btnDX">地形图</button>
+    <button id="btnLY">流域图</button>
+    <button id="btnWX">卫星图</button>
+  </div>
+  <div id="map">
+  </div>
+
+</body>
+<script>
+  var ip = "10.41.24.9";
+  var mapId = "000FG";
+  var hlLayer = "000FH";
+  var zqLayer = "000FI";
+
+
+  var map, wmtsLayer; var dicLayers = {}; var screenPoints = []; var mapExtentChange; var riverLayer; var mapMouseMoveEvent; var showDiv;
+  require([
+    "esri/map",
+    "esri/layers/WMTSLayer",
+    "esri/layers/WMTSLayerInfo",
+    "esri/geometry/Extent",
+    "esri/geometry/webMercatorUtils",
+    "esri/layers/TileInfo",
+    "esri/layers/MapImageLayer",
+    "esri/layers/MapImage",
+    "esri/SpatialReference",
+    "esri/graphic",
+    "dojo/domReady!"
+  ], function (
+    Map,
+    WMTSLayer,
+    WMTSLayerInfo,
+    Extent,
+    webMercatorUtils,
+    TileInfo,
+    MapImageLayer,
+    MapImage,
+    SpatialReference,
+    Graphic
+  ) {
+    var spaMercator = new SpatialReference(3857);
+    var worldExtent = new Extent(-20037508.342787, -20037508.342787, 20037508.342787, 20037508.342787, spaMercator);
+    var tileWidth = 256;
+    var tileHeight = 256;
+    var dpi = 96;
+    var lods = [];
+
+    /*
+      米和像素间的换算公式：
+          1英寸=0.0254米=96像素
+          1像素=0.0254/96 米
+    */
+    var size = worldExtent.getWidth() / tileWidth;
+    for (var z = 0; z < 18; ++z) {
+      lods.push({ level: z, resolution: size / Math.pow(2, z), scale: size / Math.pow(2, z) * dpi / 0.0254 });
+    }
+    var tileInfo1 = new TileInfo({
+      "dpi": dpi,
+      "format": "image/png",
+      "compressionQuality": 0,
+      "spatialReference": spaMercator,
+      "rows": tileHeight,
+      "cols": tileWidth,
+      "origin": {
+        "x": worldExtent.xmin,
+        "y": worldExtent.ymax
+      },
+      "lods": lods
+    });
+
+    var henanExtent = new Extent(11806363.494904606, 3545255.3749651657, 13500208.041704083, 4431924.903073189, spaMercator);
+
+    var layerInfo1 = new WMTSLayerInfo({
+      tileInfo: tileInfo1,
+      fullExtent: worldExtent,
+      initialExtent: henanExtent,
+      identifier: "basemap:4:0,basemap:7_0:0",
+      format: "png",
+      style: "_null"
+    });
+
+    //000AZ_0
+
+    var resourceInfo = {
+      version: "1.0.0",
+      layerInfos: [layerInfo1],
+      copyright: "tzxMap"
+    };
+
+    var options = {
+      id: 'wmtslayer1',
+      serviceMode: "KVP",
+      resourceInfo: resourceInfo,
+      layerInfo: layerInfo1
+    };
+
+    wmtsLayer = new WMTSLayer("http://" + ip + ":8093/api/wmts", options);
+
+
+    map = new Map("map", {
+      logo: false
+    });
+    map.addLayer(wmtsLayer);
+    var mil = new MapImageLayer({
+      'id': 'usgs_screen_overlay',
+      'visible': true
+    });
+
+    var extent = new Extent(11821650.900561718, 3581333.652315804, 13492258.590762345, 4390954.6559123, spaMercator);
+
+
+    map.addLayer(mil);
+
+
+    //getLayerStyle(); 添加标注  添加（移除）河流图层   拾取 
+
+    $("#btnAddFont").click(function () {
+      var lnglat = webMercatorUtils.webMercatorToGeographic(map.extent);
+      var bbox = lnglat.xmin + "," + lnglat.ymin + "," + lnglat.xmax + "," + lnglat.ymax;
+      var mi = new MapImage({
+        extent: extent,
+        href: 'http://' + ip + ':8093/api/wms?service=WMS&request=GetMap&version=1.1.1&format=image/png&layers=' + zqLayer + '&user_id=13346&color_id=0&bbox=' + bbox + '&width=' + map.width + '&height=' + map.height + '&tiled=false&draw_text=true&union_lyr=true',
+        height: map.height,
+        width: map.width
+      });
+      mil.addImage(mi);
+      mapExtentChange = map.on("extent-change", function (e) {
+        //delScreenMarker();
+        //中心事件改变后改变当前边界范围
+        var lnglatExtent = webMercatorUtils.webMercatorToGeographic(e.extent);
+        var tempBox = lnglatExtent.xmin + "," + lnglatExtent.ymin + "," + lnglatExtent.xmax + "," + lnglatExtent.ymax
+        var tempUrl = 'http://' + ip + ':8093/api/wms?service=WMS&request=GetMap&version=1.1.1&format=image/png&layers=' + zqLayer + '&user_id=13346&color_id=0&bbox=' + tempBox + '&width=' + map.width + '&height=' + map.height + '&tiled=false&draw_text=true&union_lyr=true';
+
+        //mil.getImages()[0].href = tempUrl;
+        //mil.getImages()[0].extent= e.extent;
+        //mil.refresh();
+        //$(mil.getNode()).find("img").attr("src",tempUrl);
+        mil.removeAllImages();
+        mil.addImage(new MapImage({ extent: e.extent, href: tempUrl, height: map.height, width: map.width }));
+        //getVectorMarker(rang);
+
+      });
+    })
+
+    $("#btnRemoveFont").click(function () {
+      mil.removeAllImages();
+      mapExtentChange.remove();
+    })
+
+    //添加河流图层
+    $("#btnAddRiverLayer").click(function () {
+      if (riverLayer) return;
+      var layerInfo1 = new WMTSLayerInfo({
+        tileInfo: tileInfo1,
+        fullExtent: worldExtent,
+        initialExtent: henanExtent,
+        identifier: hlLayer + "_0",
+        format: "png",
+        style: "_null"
+      });
+      //000AZ_0
+      var resourceInfo = {
+        version: "1.0.0",
+        layerInfos: [layerInfo1],
+        copyright: "tzxMap"
+      };
+      var options = {
+        id: 'wmtslayer2',
+        serviceMode: "KVP",
+        resourceInfo: resourceInfo,
+        layerInfo: layerInfo1
+      };
+      riverLayer = new WMTSLayer("http://" + ip + ":8093/api/wmts", options);
+      map.addLayer(riverLayer);
+    })
+
+    $("#btnRemoveRiverLayer").click(function () {
+
+      map.removeLayer(riverLayer);
+      riverLayer = undefined;
+    })
+
+
+    function showInfo() {
+      var arg = arguments;
+      if (!showDiv) {
+        var div = document.createElement('div');
+        div.innerHTML = arg[3];
+        div.style.left = arg[1] + 'px';
+        div.style.top = arg[2] + 'px';
+        div.style.position = 'absolute';
+        $('#' + arg[0]).append(div);
+        $('#' + arg[0]).css('position', 'relative');
+        showDiv = div;
+      }
+      showDiv.style.left = arg[1] + "px";
+      showDiv.style.top = arg[2] + "px";
+      showDiv.innerHTML = arg[3];
+
+    }
+
+    //开启拾取
+    $("#btnOpenSQ").click(function () {
+      mapMouseMoveEvent = map.on("mouse-move", function (event) {
+        var point = webMercatorUtils.webMercatorToGeographic(event.mapPoint);
+        var screenPoint = event.screenPoint;
+        var mouseLng = point.x, mouseLat = point.y;
+        var config = hlLayer + "|T|5";
+        var _path = "http://" + ip + ":8093/api/pysvc/v1/" + "pick_meta_data?user_id=13346&color_id=0&lat=" + mouseLat + "&lng=" + mouseLng + "&z=" + map.getZoom() + "&config=" + config;
+        $.ajax({
+          url: _path,
+          async: false,
+          dataType: 'jsonp',
+          success: function (data) {
+            if (data.body && data.body.length > 0) {
+              var infoArray = data.body[0];
+              var layerID = infoArray.lyr_id;
+              var metaName = infoArray.name;
+              showInfo("map", screenPoint.x, screenPoint.y, metaName);
+            }
+          }
+
+        })
+
+      });
+    })
+    //关闭拾取
+    $("#btnCloseSQ").click(function () {
+      if (showDiv) {
+        $(showDiv).remove();
+        showDiv = undefined;
+      }
+
+      if (mapMouseMoveEvent) {
+        mapMouseMoveEvent.remove();
+      }
+
+    })
+
+    //获取所有图层
+    $("#btnGetAllLayers").click(function () {
+      var _path = 'http://' + ip + ':8093/api/pysvc/v1/get_all_layers_info?parameters_json={"map_id":"' + mapId + '"}';
+
+      $.ajax({
+        url: _path,
+        async: false,
+        dataType: 'jsonp',
+        success: function (data) {
+          console.log(data.body);
+        }
+
+      })
+    })
+
+
+
+
+    function createNewWmtsLayer(inteLayer) {
+      var spaMercator = new SpatialReference(3857);
+      var worldExtent = new Extent(-20037508.342787, -20037508.342787, 20037508.342787, 20037508.342787, spaMercator);
+      var tileWidth = 256;
+      var tileHeight = 256;
+      var dpi = 96;
+      var lods = [];
+
+      /*
+        米和像素间的换算公式：
+        1英寸=0.0254米=96像素
+        1像素=0.0254/96 米
+      */
+      var size = worldExtent.getWidth() / tileWidth;
+      for (var z = 0; z < 18; ++z) {
+        lods.push({ level: z, resolution: size / Math.pow(2, z), scale: size / Math.pow(2, z) * dpi / 0.0254 });
+      }
+      var tileInfo1 = new TileInfo({
+        "dpi": dpi,
+        "format": "image/png",
+        "compressionQuality": 0,
+        "spatialReference": spaMercator,
+        "rows": tileHeight,
+        "cols": tileWidth,
+        "origin": {
+          "x": worldExtent.xmin,
+          "y": worldExtent.ymax
+        },
+        "lods": lods
+      });
+
+      var henanExtent = new Extent(11806363.494904606, 3545255.3749651657, 13500208.041704083, 4431924.903073189, spaMercator);
+
+      var layerInfo1 = new WMTSLayerInfo({
+        tileInfo: tileInfo1,
+        fullExtent: worldExtent,
+        initialExtent: henanExtent,
+        identifier: inteLayer,
+        format: "png",
+        style: "_null"
+      });
+
+      //000AZ_0
+
+      var resourceInfo = {
+        version: "1.0.0",
+        layerInfos: [layerInfo1],
+        copyright: "tzxMap"
+      };
+
+      var options = {
+        id: 'wmtslayer1',
+        serviceMode: "KVP",
+        resourceInfo: resourceInfo,
+        layerInfo: layerInfo1
+      };
+
+      wmtsLayer = new WMTSLayer("http://" + ip + ":8093/api/wmts", options);
+
+      map.addLayer(wmtsLayer, 0);
+    }
+
+    //
+    $("#btnDX").click(function () {
+      map.removeLayer(wmtsLayer);
+      createNewWmtsLayer("basemap:2:0,basemap:5:0,basemap:7_0:0");
+
+    })
+
+    $("#btnLY").click(function () {
+      map.removeLayer(wmtsLayer);
+      createNewWmtsLayer("basemap:3:0,basemap:7_0:0");
+
+    })
+
+    $("#btnZQJ").click(function () {
+      map.removeLayer(wmtsLayer);
+      createNewWmtsLayer("basemap:5:0,basemap:7_0:0");
+
+    })
+
+    $("#btnZQ").click(function () {
+      map.removeLayer(wmtsLayer);
+      createNewWmtsLayer("basemap:4:0,basemap:7_0:0");
+
+    })
+
+    $("#btnWX").click(function () {
+      map.removeLayer(wmtsLayer);
+      createNewWmtsLayer("basemap:0:0,basemap:1_1:0,basemap:7_1:0");
+
+    })
+
+  });
+
+</script>
+
+</html>

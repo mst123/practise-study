@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // new Object() 方式创建
+    var a = { rep: 'apple' }
+    var b = new Object(a)
+    console.log(b) // {rep: "apple"}
+    console.log(b.__proto__) // {}
+    console.log(b.rep) // "apple"
+
+    // Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__
+    var a = { rep: 'apple' }
+    var b = Object.create(a , {
+      foo: { 
+        writable:true,
+        configurable:true,
+        value: "hello" 
+      }
+    })
+    console.log(b)  // {foo: "hello"}
+    console.log(b.__proto__) // {rep: "apple"}
+    console.log(b.rep) // "apple"
+    //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./js/babel.min.js"></script>
+  <script type="text/babel">  
+    function MyPromise(executor) {
+      var _this = this;
+      this._status = "pending";
+      this._successCallBack = null;
+      this._errorCallBack = null;
+      var resolve = function (res) {
+        if (_this._status === "pending") {
+          _this._status = "fulfilled";
+          // 运行then函数传递过来的成功函数
+          // 并将结果作为参数回传
+          _this._successCallBack(res);
+        }
+      }
+      var reject = function (res) {
+        if (_this._status === "pending") {
+          _this._status = "rejected";
+          // 运行then函数传递过来的错误函数
+          // 并将结果作为参数回传
+          _this._errorCallBack(res);
+        }
+      }
+      // 把内部函数resolve, reject作为参数，把传进来的函数执行一遍
+      setTimeout(() => { // 使用setTimeout 是让resolve晚于then方法赋值
+        executor(resolve, reject)
+      }, 0)
+    }
+    MyPromise.prototype.then = function (sucess, error) {
+      this._successCallBack = sucess;
+      this._errorCallBack = error;
+    }
+  </script>
+</body>
+</html>

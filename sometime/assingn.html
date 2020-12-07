@@ -1,0 +1,33 @@
+<!--
+ * @Descripttion : 
+ * @Author       : 马识途
+ * @Date         : 2020-05-14 18:32:05
+ * @LastEditTime : 2020-05-14 19:35:32
+ * @FilePath     : \projecte:\codeFile\sometime\assingn.html
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let a = {
+      a: 1,
+      b: {
+        a: 1
+      }
+    }
+    let b = {
+      c: 2
+    }
+    let obj1 = Object.assign(a, b)
+    let obj2 = Object.assign({}, a, b)
+    a.b.a = 3222
+    console.log(obj1);
+    console.log(obj2);
+  </script>
+</body>
+</html>

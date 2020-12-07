@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./js/babel.min.js"></script>
+  <script type="text/babel">  
+    function MyEvent() {
+      this.stash = {}
+    }
+    MyEvent.prototype.on = function (eventName, callback){
+      this.stash[eventName] ? this.stash[eventName].push(callback) :  this.stash[eventName] = [callback]
+    }
+    MyEvent.prototype.emit = function (eventName, data){
+      if(this.stash[eventName]){
+        this.stash[eventName].forEach(fnc => {
+          fnc(data);
+        })
+      }
+    }
+  </script>
+</body>
+</html>

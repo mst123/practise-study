@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var triangle = {a: 1, b: 2, c: 3}; 
+    function ColoredTriangle() {
+      this.color = 'red';
+    }
+    Object.assign(ColoredTriangle.prototype, triangle) //ColoredTriangle.prototype.constructor === ColoredTriangle// true
+    var c = new ColoredTriangle();
+    console.log(c);
+    console.log(Object.getOwnPropertyDescriptors(c));
+    var copyC = Object.create(Object.getPrototypeOf(c), Object.getOwnPropertyDescriptors(c))
+    console.log(copyC);
+  </script>
+</body>
+</html>

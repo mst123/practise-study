@@ -1,0 +1,30 @@
+<!--
+ * @Descripttion : 
+ * @Author       : 马识途
+ * @Date         : 2020-05-14 18:32:05
+ * @LastEditTime : 2020-05-14 19:35:56
+ * @FilePath     : \projecte:\codeFile\sometime\getOwnPropertyDescriptors.html
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const source = {
+      set foo(value) {
+        console.log(value);
+      }
+    };
+
+    const target2 = {};
+    Object.defineProperties(target2, Object.getOwnPropertyDescriptors(source));
+    Object.getOwnPropertyDescriptor(target2, 'foo')
+    console.log(target2);
+    
+  </script>
+</body>
+</html>

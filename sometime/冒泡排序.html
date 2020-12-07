@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./js/babel.min.js"></script>
+  <script type="text/babel">  
+    var arr = [1,5,2,4,15,13,6,16,22,36,25]
+    /* for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr.length - 1 - i; j++) {
+        if (arr[j] >= arr[j+1]) {
+          [arr[j],arr[j+1]] = [arr[j+1],arr[j]];
+        }   
+      }
+    } */
+    /* for (let i = 0; i < arr.length; i++) {
+      var temp = arr[i]
+      for (let j = 0 + i; j < arr.length; j++) {
+        if(arr[j] < temp) {
+          [arr[j],arr[i]] = [arr[i],arr[j]];
+        }
+      }
+    } */
+    function quickSort (arr){
+      if(arr.length <= 1){
+        return arr;
+      }else{
+        var index = Math.floor(arr.length/2);
+        var datum = arr.splice(index, 1)[0];
+        var left = [];
+        var right = [];
+        for (let i = 0; i < arr.length; i++) {
+          if(arr[i] <= datum) {
+            left.push(arr[i])
+          }else{
+            right.push(arr[i])
+          }
+        }
+        return quickSort(left).concat(datum, quickSort(right));
+      }
+
+    }
+    quickSort(arr)
+    console.log(arr);
+  </script>
+</body>
+</html>

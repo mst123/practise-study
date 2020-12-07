@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./js/babel.min.js"></script>
+  <script type="text/babel">
+    function Person(name){
+      this.name = name
+    }
+    Person.prototype.say = function(){
+      return 'hi'
+    }
+    function Student(name, age){
+      Person.call(this, name);
+      this.age = age
+    }
+    Student.prototype = Object.assign(Object.create(Person.prototype), Student.prototype)
+    Student.prototype.constructor = Student;
+    
+    const student = new Student('lucy',30)
+    console.log(Student);
+    console.log(student);
+  </script>
+</body>
+</html>

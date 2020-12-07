@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Person(name) {
+      this.name = name;
+    }
+    Person.prototype.say = function (){
+      console.log('I am person');
+    }
+    var dali = new Person("dali")
+    console.log(dali);
+    function Student(name){
+      Person.call(this, name)
+    }
+    Student.prototype = Object.create(Person.prototype, Object.getOwnPropertyDescriptors(Student.prototype))
+  </script>
+</body>
+</html>

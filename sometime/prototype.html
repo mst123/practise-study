@@ -1,0 +1,68 @@
+<!--
+ * @Descripttion : _proto_ prtotype construct
+ * @Author       : 马识途
+ * @Date         : 2020-04-24 09:12:26
+ * @LastEditTime : 2020-05-17 14:18:24
+ * @FilePath     : \projecte:\codeFile\sometime\prototype.html
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    /* function Cat(name, color) {
+      this.name = name;  //实例属性
+      this.color = color; //实例属性
+    }
+    Cat.prototype.type = "猫科动物";
+    Cat.prototype.eat = function () { alert("吃老鼠") };
+
+    var cat1 = new Cat("大毛", "黄色");
+    var cat2 = new Cat("二毛", "黑色");
+    console.log(cat1);
+
+    //实例对象cat1本身并没有constructor属性，
+    //但它可以查找原型对象Cat.prototype的constructor属性 
+    console.log(cat1.hasOwnProperty('constructor'));//false
+    console.log('constructor' in cat1)              //true
+    console.log(Cat.prototype);
+    //  type: "猫科动物"
+    //  eat: ƒ ()
+    //  constructor: ƒ Cat(name, color) 
+    //  __proto__: Object
+    Cat.prototype.constructor === Cat
+    cat1.constructor === Cat.prototype.constructor === cat1.__proto__.constructor === Cat
+    Cat.prototype === cat1.__proto__ */
+    //实际上__proto__ 是浏览器为了方便查找原型链 自己定义的
+
+    //es6
+
+    class A {
+      constructor(){
+
+      }
+      toString(){
+        console.log('A');
+      }
+    }
+
+    class B extends A {
+      constructor(){
+        super()
+      }
+    }
+
+    B.__proto__ === A // true
+    console.log(B.__proto__);
+    console.log(B.__proto__.prototype);
+    
+  </script>
+</body>
+
+</html>

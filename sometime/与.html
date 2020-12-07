@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    console.log({a:1}&&{a:2});       //{a:2}
+    console.log(true&&{a:2});        //{a:2}
+    console.log(false&&{a:2});       //false
+    console.log({a:2}&&true);        //true
+    console.log({a:2}&&false);       //false
+    console.log('--------------------------------------');
+    console.log(false&&{a:2});       //false
+    console.log(null&&{a:2});        //null
+    console.log(NaN&&{a:2});         //NaN
+    console.log(undefined&&{a:2});   //undefined
+    console.log('aaaa'&&{a:2});      //{a:2}
+    console.log('--------------------------------------');
+    console.log({a:2}&&false);       //false
+    console.log({a:2}&&null);        //null
+    console.log({a:2}&&NaN);         //NaN
+    console.log({a:2}&&undefined);   //undefined
+    console.log('--------------------------------------');
+    console.log(true&&false);        //false
+    console.log(true&&null);         //null
+    console.log(true&&NaN);          //NaN
+    console.log(true&&undefined);    //undefined
+    console.log(true&&'11111');      //11111
+    console.log('--------------------------------------');
+    console.log(false&&true);        //false
+    console.log(null&&true);         //null
+    console.log(NaN&&true);          //NaN
+    console.log(undefined&&true);    //undefined
+    console.log('11111'&&true);      //true
+    console.log('--------------------------------------');
+    console.log(false&&false);       //false
+    console.log(false&&null);        //false
+    console.log(false&&NaN);         //false
+    console.log(false&&undefined);   //false
+    console.log(false&&'1112aa');    //false
+    console.log('--------------------------------------');
+    console.log(false&&false);       //false
+    console.log(null&&false);        //null
+    console.log(NaN&&false);         //NaN
+    console.log(undefined&&false);   //undefined
+    console.log('1111122aa'&&false); //false
+  </script>
+</body>
+</html>
