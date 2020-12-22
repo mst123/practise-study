@@ -1,6 +1,10 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
+    <TitleBarRound>如果左侧显示蓝色条纹，表示插件按需引入成功</TitleBarRound>
+    <title-bar-round>1111111111</title-bar-round>
+    <el-button>2222222</el-button>
+    <el-table-ex></el-table-ex>
     {{$data.$name}}
     <SlopScope>
       <template v-slot:header="{user}"> <!-- 解构，更加简洁 -->

@@ -6,38 +6,35 @@
   <title>Document</title>
 </head>
 <body>
-  <script src="./js/babel.min.js"></script>
-  <script type="text/babel">  
-    function MyPromise(executor) {
-      var _this = this;
-      this._status = "pending";
-      this._successCallBack = null;
-      this._errorCallBack = null;
-      var resolve = function (res) {
-        if (_this._status === "pending") {
-          _this._status = "fulfilled";
-          // 运行then函数传递过来的成功函数
-          // 并将结果作为参数回传
-          _this._successCallBack(res);
-        }
-      }
-      var reject = function (res) {
-        if (_this._status === "pending") {
-          _this._status = "rejected";
-          // 运行then函数传递过来的错误函数
-          // 并将结果作为参数回传
-          _this._errorCallBack(res);
-        }
-      }
-      // 把内部函数resolve, reject作为参数，把传进来的函数执行一遍
-      setTimeout(() => { // 使用setTimeout 是让resolve晚于then方法赋值
-        executor(resolve, reject)
-      }, 0)
+  <!-- <script src="./js/babel.min.js"></script> -->
+  <script>
+    Function.prototype.myCall = function myCall(ctx){
+      var context = ctx || window;
+      var arg = [].slice.call(arguments, 1);
+      context.fnc = this;
+      context.fnc(...arg)
     }
-    MyPromise.prototype.then = function (sucess, error) {
-      this._successCallBack = sucess;
-      this._errorCallBack = error;
+    Function.prototype.myApply = function myCall(ctx){
+      var context = ctx || window;
+      var arg = [].slice.call(arguments, 1);
+      context.fnc = this;
+      context.fnc(...arg[0])
     }
+    var a = {
+      a: 1
+    }
+    var b = {
+      a: 2,
+      fnc: function(b, c) {
+        console.log(this.a);
+        console.log(b);
+        console.log(c);
+      }
+    }
+    b.fnc.call(a, 2, 3)     // 1 2 3
+    b.fnc.apply(a, [2, 3])  // 1 2 3
+    b.fnc.myCall(a, 2, 3)     // 1 2 3
+    b.fnc.myApply(a, [2, 3])  // 1 2 3
   </script>
 </body>
 </html>
