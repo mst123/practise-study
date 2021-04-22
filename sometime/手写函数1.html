@@ -1,0 +1,78 @@
+<!--
+ * @Author: mashitu
+ * @Date: 2021-02-20 11:00:57
+ * @LastEditTime: 2021-02-20 13:50:08
+ * @LastEditors: mashitu
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // call apply
+    var a = {
+      a: 1
+    }
+    function ceShi(x, y){
+      console.log(this.a);
+      console.log(x);
+      console.log(y);
+    }
+    Function.prototype.myCall = function(ctx) {
+      var context = ctx || window;
+      context.fnc = this;
+      var args = [...arguments].slice(1);
+      context.fnc(...args);
+      Reflect.deleteProperty(context, 'fnc');
+    }
+    Function.prototype.myApply = function(ctx) {
+      var context = ctx || window;
+      context.fnc = this;
+      context.fnc(...arguments[1]);
+      Reflect.deleteProperty(context, 'fnc');
+    }
+    ceShi.call(a, 2, 3)
+    ceShi.myCall(a, 2, 3)
+    ceShi.myCall(null, 2, 3)
+    ceShi.myApply(a, [2, 3])
+    // bind 稍微麻烦一些
+    // 需要进行参数合并
+    Function.prototype.myBind = function(ctx) {
+      var context = ctx || window;
+      context.fnc = this;
+      var args = [...arguments].slice(1);
+      return function(){
+        context.fnc(...args.concat([...arguments]))
+      }
+    }
+    var bindFnc1 = ceShi.bind(a, 2)
+    var bindFnc2 = ceShi.myBind(a, 2)
+    bindFnc1(3);
+    bindFnc2(3);
+    // 模拟new操作符
+    function Student(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+    Student.prototype.say = function() {
+      console.log('我是个学生');
+    }
+    var xiaoMing = new Student("小明", 15);
+    function myNew(cst) {
+      var obj = {};
+      cst.apply(obj, arguments.slice(1));
+      obj.__proto__ = cst.prototype;
+      return obj;
+    }
+    // 模拟Object.create()
+    // 手写promise
+    
+  </script>
+</body>
+</html>

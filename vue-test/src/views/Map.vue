@@ -38,6 +38,7 @@
     </select>
     <el-select v-model="selected1" placeholder="请选择">
       <el-option value="">123</el-option>
+      
       <el-option :value="{ number: 123 }">123</el-option>
       <el-option :value="ceshiObj1">123</el-option>
     </el-select>
@@ -53,6 +54,7 @@
 <script>
 // @ is an alias to /src
 import SlopScope from '@/components/slotScope.vue'
+import {a} from '@/components/importTest/index.js'
 export default {
   name: 'Home',
   data() {
@@ -84,21 +86,9 @@ export default {
       this.arr = [].concat([1,2,3,4,this.index,5])
     }
   },
-  beforeCreate() {
-    console.log("beforeCreate");
-    console.log(this);
-  },
-  created() {
-    console.log("created");
-    console.log(this);
-  },
-  beforeMount() {
-    console.log("beforeMount");
-    console.log(this);
-  },
   mounted() {
-    console.log("mounted");
-    console.log(this);
-  }
+    console.log(a);
+    
+  },
 }
 </script>

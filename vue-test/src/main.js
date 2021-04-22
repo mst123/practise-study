@@ -12,6 +12,22 @@ import {
 
 Vue.use(Table);
 
+Vue.directive('demo', {
+  bind: function (el, binding, vnode) {
+    console.log(binding);
+    console.log(el);
+    console.log(vnode);
+  }
+})
+// v-demo:ceshiObj1.a.b="sd"
+/* arg: "ceshiObj1"
+def: {bind: ƒ}
+expression: "sd"
+modifiers: {a: true, b: true}
+name: "demo"
+rawName: "v-demo:ceshiObj1.a.b"
+value: undefined */
+
 import './plugins/element.js'
 Vue.use(TitleBarRound)
 Vue.use(table)
@@ -22,3 +38,4 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+console.log(Vue);
