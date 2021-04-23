@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    ul:nth-of-type(1) li:nth-child(4){
+      color: yellow;
+    }
+    ul:nth-of-type(2) :nth-child(4){
+      color: yellow;
+    }
+    ul:nth-of-type(1) li:nth-of-type(4){
+      color: blue;
+    }
+    li:nth-of-type(6){
+      font-weight: 900;
+    }
+    li:nth-child(6){
+      background: #cccccc;
+    }
+    a{
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li></li>
+    <li></li>
+    <a href="">a</a>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <ul>
+    <li></li>
+    <li></li>
+    <a href="">a</a>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <script>
+    [...document.querySelectorAll("ul")].forEach((ul, indexT) => {
+      [...ul.querySelectorAll("li")].forEach((li, indexB) => {
+        li.innerText = (indexT+1)+''+(indexB+1)
+      })
+    })
+  </script>
+</body>
+</html>

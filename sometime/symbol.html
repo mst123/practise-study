@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let a = {};
+    Object.defineProperty(a, Symbol('222'), {
+      value: 123,
+      writable: true,
+      enumerable: false,
+      configurable: true
+    });
+    a[Symbol('bbb')] = 2 
+    let c = {...a}
+    console.log(Object.getOwnPropertyDescriptors(a));
+    console.log(Object.keys(a));
+    console.log(c);
+    console.log(JSON.stringify(c));
+    let b = Object.create(a);
+    console.log(b);
+    console.log(Object.getOwnPropertySymbols(a));
+    console.log(Object.getOwnPropertySymbols(b));
+  </script>
+</body>
+</html>
