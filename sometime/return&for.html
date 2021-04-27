@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    for (var i = 0; i < 10; i++) {
+      console.log(i);
+      if(i===3){
+        c1();
+      }
+      if(i===5){
+        // javascript中的return是只能放在function中的
+        // return c2();
+      }
+      if(i===7){
+        return;
+      }
+    }
+    function c1() {
+      return;
+    }
+    function c2() {
+      return;
+    }
+  </script>
+</body>
+</html>

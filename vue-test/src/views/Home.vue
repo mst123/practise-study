@@ -30,23 +30,8 @@
         footer
       </template>
     </SlopScope>
-    <select v-demo:ceshiObj1.a.b="'sd'" v-model="selected">
-        <!-- 内联对象字面量 -->
-      <option value="">123</option>
-      <option :value="{ number: 123 }">123</option>
-      <option :value="ceshiObj1">123</option>
-    </select>
-    <el-select v-model="selected1" placeholder="请选择">
-      <el-option value="">123</el-option>
-      <el-option :value="{ number: 123 }">123</el-option>
-      <el-option :value="ceshiObj1">123</el-option>
-    </el-select>
-    <br /> 给data.ceshi 添加新增属性b 不具有响应式 只能通过set方法
-    {{wceshi}}
-    <button @click="assign">assign</button>
-    <button @click="array1">array1</button>
-    <button @click="array2">array2</button>
-    <el-button v-for="(item, index) of arr" :key="index">{{item}}</el-button>
+    <div v-bind:test="ceshiProp" class="prop"></div>
+    <div v-bind.prop:test="ceshiProp" class="prop"></div>
   </div>
 </template>
 
@@ -102,3 +87,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+  .prop{
+    height: 200px;
+    width: 200px;
+    background: red;
+  }
+</style>

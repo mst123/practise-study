@@ -19,6 +19,9 @@
       Person.call(this, name)
     }
     Student.prototype = Object.create(Person.prototype, Object.getOwnPropertyDescriptors(Student.prototype))
+
+    var xiaoM = new Student("xiaoM")
+    console.log(xiaoM);
   </script>
 </body>
 </html>
